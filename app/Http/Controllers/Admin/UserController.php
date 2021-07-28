@@ -12,7 +12,10 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
-{
+{   
+    public function indexUser() {
+        return view('admin.user');
+    }
     public function index() {
         //check login from cookie
 		$userCookie = Cookie::get('userCredential');
@@ -36,6 +39,7 @@ class UserController extends Controller
 
         return view('admin.login');
     }
+
     public function doLogin(Request $request) {
         //validate the info, create rules for the inputs
         $rules = array(
@@ -77,5 +81,13 @@ class UserController extends Controller
 					->withInput($request->except('password'));
 			}
         }
+    }
+    public function destroy(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        Cookie::queue(Cookie::forget('userCredential'));
+        return redirect('/user/login');
     }
 }

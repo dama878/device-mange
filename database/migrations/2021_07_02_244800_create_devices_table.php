@@ -16,10 +16,11 @@ class CreateDevicesTable extends Migration
         Schema::create('devices', function (Blueprint $table) {
             $table->increments('DEV_ID');
             $table->integer('TYPE_ID')->unsigned();
-            $table->string('Name')->nullable();
+            $table->integer('MAN_ID')->unsigned();
+            $table->string('DevName')->nullable();
             $table->longText('Description')->nullable();
             $table->string('KeyWord')->nullable();
-            $table->string('Status')->nullable();
+            $table->tinyInteger('Status')->nullable();
             $table->string('SerialNumber')->nullable();
             $table->string('Detail')->nullable();
             $table->date('GuaranteeStart')->nullable();
@@ -33,6 +34,8 @@ class CreateDevicesTable extends Migration
             $table->dateTime('UpdatedDate')->nullable();
             $table->integer('UpdatedBy')->nullable();
             $table-> foreign('TYPE_ID')->references('TYPE_ID')->on('types')->onDelete('cascade');
+            $table-> foreign('MAN_ID')->references('MAN_ID')->on('manufacturers')->onDelete('cascade');
+
         });
     }
 

@@ -19,9 +19,13 @@
   <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/pnotify/core/dist/PNotify.css">
   <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/pnotify/core/dist/BrightTheme.css">
   <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/pnotify/mobile/dist/PNotifyMobile.css">
+    <!-- daterange picker -->
+    <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/datetimepicker-master/build/jquery.datetimepicker.min.css">
   <!-- Select2 -->
   <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/select2/css/select2.min.css">
   <link rel="stylesheet" href="{{url('/public/admin')}}/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css">
+
   <!-- Theme style -->
   <link rel="stylesheet" href="{{url('/public/admin')}}/dist/css/adminlte.min.css">
   <link rel="stylesheet" href="{{url('/public/admin')}}/css/custom.css">
@@ -68,6 +72,16 @@
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
       </li>
+      @auth()
+      <li class="nav-item">
+          <form action="{{action('Admin\UserController@destroy')}}" method="post">
+              @csrf
+              <button type="submit" class="btn btn-link">
+                  <i class="fas fa-sign-out-alt"></i>
+              </button>
+          </form>
+      </li>
+      @endauth
       <li class="nav-item">
         <a class="nav-link" data-widget="fullscreen" href="#" role="button">
           <i class="fas fa-expand-arrows-alt"></i>
@@ -118,6 +132,109 @@
             <a href="{{action('Admin\TypeController@index')}}" class="nav-link">
               <i class="nav-icon far fa-list-alt"></i>
               <p>Type</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\ManufacturerController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Manufacturer</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\BorrowerController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Borrower</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\BorrowerGroupController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Borrower Group</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\BorrowReturnController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Borrow Return</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\FineController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Fine</p>
+            </a>
+          </li>
+
+          <li class="nav-item">
+            <a href="{{action('Admin\ModelController@index')}}" class="nav-link">
+              <i class="nav-icon fas fa-boxes"></i>
+              <p>Model</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\BorrowDetailModelController@index')}}" class="nav-link">
+              <i class="nav-icon fas fa-boxes"></i>
+              <p>Borrow Detail Model</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\BorrowController@index')}}" class="nav-link">
+              <i class="nav-icon fas fa-boxes"></i>
+              <p>Borrow</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\ExportController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Export</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\ExportDetailController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Export Detail</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\ImportController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Import</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\ImportDetailController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Import Detail</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\CustomerController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Customer</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\RoleController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Role</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\UserController@indexUser')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>User</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\PermissionRoleController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Permission Role</p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="{{action('Admin\PermissionController@index')}}" class="nav-link">
+              <i class="nav-icon far fa-list-alt"></i>
+              <p>Permission</p>
             </a>
           </li>
         </ul>
@@ -171,6 +288,7 @@
 <script src="{{url('/public/admin')}}/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
 <script src="{{url('/public/admin')}}/plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
 <script src="{{url('/public/admin')}}/plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+<script src="{{url('/public/admin')}}/plugins/datatables/dataTables.buttons.min.js"></script>
 {{-- Bootstrap Switch --}}
 <script src="{{url('/public/admin')}}/plugins/bootstrap-switch/js/bootstrap-switch.min.js"></script>
 <!-- jQuery confirm -->
@@ -180,6 +298,12 @@
 <script src="{{url('/public/admin')}}/plugins/pnotify/mobile/dist/PNotifyMobile.js"></script>
 <!-- Select2 -->
 <script src="{{url('/public/admin')}}/plugins/select2/js/select2.full.min.js"></script>
+<!-- date-time-picker -->
+<script src="{{url('/public/admin')}}/plugins/datetimepicker-master/build/jquery.datetimepicker.full.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+
+<!-- date-range-picker -->
+<script src="{{url('/public/admin')}}/plugins/daterangepicker/daterangepicker.js"></script>
 <!-- jQuery Validation -->
 <script src="{{url('/public/admin')}}/plugins/jquery-validation/jquery.validate.min.js"></script>
 {{-- jquery serializeJSON --}}
@@ -191,7 +315,7 @@
     var base_url = '{{url('')}}';
     var api_url = base_url + '/internal';
     
-    var infoData;
+    var infoData; 
     PNotify.defaultModules.set(PNotifyMobile, {});
 </script>
 @yield('js')

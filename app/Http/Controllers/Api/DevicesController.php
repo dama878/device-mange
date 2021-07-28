@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\BaseResult;
 use App\Models\Device;
-use App\Models\Type;
-use Facade\FlareClient\Stacktrace\File;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class DevicesController extends Controller
 {
@@ -23,7 +24,12 @@ class DevicesController extends Controller
                 $data= Device:: join('types', function ($join) {
             $join->on('devices.TYPE_ID', '=', 'types.TYPE_ID')
                  ->where(['types.IsDeleted'=> 0,'devices.isDeleted'=>0]) ;
-            })->get();
+            })->join('manufacturers', function ($join) {
+                $join->on('devices.MAN_ID', '=', 'manufacturers.MAN_ID')
+                     ->where(['manufacturers.IsDeleted'=> 0,'devices.isDeleted'=>0]) ;
+                })->get();
+
+                         
         } 
         return BaseResult::withData($data);
     }
@@ -31,12 +37,19 @@ class DevicesController extends Controller
         //validate the info, create rules for the inputs
         $rules = array(
             'id' => 'numeric',
-            'Name' => 'required',
+            'DevName' => [
+                'required',
+                Rule::unique('devices')
+                    ->where('IsDeleted', 0)
+            ],
             'DisplayOrder' => 'required|numeric|min:1',
-            'Image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'Img' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000'
         );
+        $customerMessage = [
+            'unique' => 'The devices already exists',
+        ];
         // run the validation rules on the inputs from the form
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, $customerMessage);
         if ($validator->fails()) {
             return BaseResult::error(400, $validator->messages()->toJson());
         } else {
@@ -44,13 +57,18 @@ class DevicesController extends Controller
             $device = new Device;
            
             try {
-                $device->Name = $request->Name;
+                // $dates=explode('-',$request->GuaranteeDate);
+                // $device->GuaranteeStart = $dates[0];
+                // $device->GuaranteeEnd =$dates[1];
+                $device->DevName = $request->DevName;
                 $device->TYPE_ID = $request->TYPE_ID;
+                $device->MAN_ID = $request->MAN_ID;
                 $device->Description = $request->Description;
                 $device->KeyWord = $request->KeyWord;
                 $device->Status = $request->Status;
                 $device->SerialNumber = $request->SerialNumber;
                 $device->Detail = $request->Detail;
+               
                 $device->GuaranteeStart = $request->GuaranteeStart;
                 $device->GuaranteeEnd = $request->GuaranteeEnd;
                 
@@ -61,10 +79,10 @@ class DevicesController extends Controller
                 $device->CreatedBy = $user->USE_ID;
                 $device->save();
 
-                if ($request->hasFile('Image')) {
-                    $filename = pathinfo($request->Image->getClientOriginalName(), PATHINFO_FILENAME);
-                    $imageName = $device->DEV_ID . '_' . $filename . '_' . time() . '.' . $request->Image->extension();
-                    $request->Image->move(public_path('data/devices'), $imageName);
+                if ($request->hasFile('Img')) {
+                    $filename = pathinfo($request->Img->getClientOriginalName(), PATHINFO_FILENAME);
+                    $imageName = $device->DEV_ID . '_' . $filename . '_' . time() . '.' . $request->Img->extension();
+                    $request->Img->move(public_path('data/devices'), $imageName);
                     $device->Img = $imageName;
                     $device->save();
                 }
@@ -79,12 +97,19 @@ class DevicesController extends Controller
         //validate the info, create rules for the inputs
         $rules = array(
             'id' => 'numeric',
-            'Name' => 'required',
+            'DevName' => [
+                'required',
+                Rule::unique('devices')->where('IsDeleted', 0)->ignore(Device::find($request->input('id')))
+                    
+            ],
             'DisplayOrder' => 'required|numeric|min:1',
-            'Image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'Img' => 'image|mimes:jpeg,png,jpg,gif,svg|max:10000'
         );
+        $customerMessage = [
+            'unique' => 'The devices already exists',
+        ];
         // run the validation rules on the inputs from the form
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules, $customerMessage);
         if ($validator->fails()) {
             return BaseResult::error(400, $validator->messages()->toJson());
         } else {
@@ -92,8 +117,9 @@ class DevicesController extends Controller
             $device = Device::find($request->input('id'));
             if ($device) {
                 try {
-                    $device->Name = $request->Name;
+                    $device->DevName = $request->DevName;
                     $device->TYPE_ID = $request->TYPE_ID;
+                    $device->MAN_ID = $request->MAN_ID;
                     $device->Description = $request->Description;
                     $device->KeyWord = $request->KeyWord;
                     $device->Status = $request->Status;
@@ -101,6 +127,7 @@ class DevicesController extends Controller
                     $device->Detail = $request->Detail;
                     $device->GuaranteeStart = $request->GuaranteeStart;
                     $device->GuaranteeEnd = $request->GuaranteeEnd;
+                    
                     $device->DisplayOrder = $request->DisplayOrder;                
                     $device->IsDeleted = 0;
                     $device->UpdatedDate = now();
@@ -108,7 +135,7 @@ class DevicesController extends Controller
 
                     $device->save();
 
-                    if ($request->hasFile('Image')) {
+                    if ($request->hasFile('Img')) {
                         
                         // delete old file
                         $oldFile = $device->Img;
@@ -116,9 +143,9 @@ class DevicesController extends Controller
                             File::delete(public_path('data/devices/' . $oldFile));
                         }
 
-                        $filename = pathinfo($request->Image->getClientOriginalName(), PATHINFO_FILENAME);
-                        $imageName = $device->DEV_ID . '_' . $filename . '_' . time() . '.' . $request->Image->extension();
-                        $request->Image->move(public_path('data/devices'), $imageName);
+                        $filename = pathinfo($request->Img->getClientOriginalName(), PATHINFO_FILENAME);
+                        $imageName = $device->DEV_ID . '_' . $filename . '_' . time() . '.' . $request->Img->extension();
+                        $request->Img->move(public_path('data/devices'), $imageName);
                         $device->Img = $imageName;
                         $device->save();
                     }

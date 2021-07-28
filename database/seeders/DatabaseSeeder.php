@@ -14,13 +14,21 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        DB::table('roles')->insert([
+            'RoleName'=>'admin',
+            'IsDeleted' => 0,
+            'CreatedDate' => now()
+        ]);
         DB::table('users')->insert([
+            'ROLE_ID' =>'1',
             'username' => 'admin',
             'password' => bcrypt('123456'),
-            'fullname' => 'Web Admin',
+            'FirstName' => 'Web Admin',
+            'LastName' => 'Web Admin',
             'email' => 'admin@yahoo.com',
             'IsDeleted' => 0,
             'CreatedDate' => now()
         ]);
+        
     }
 }

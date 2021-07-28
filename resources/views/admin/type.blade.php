@@ -26,7 +26,7 @@
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span> Category</h5>
+                <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span> Type </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -40,16 +40,16 @@
                             <select id="drpParentId" name="PARENT_ID"></select>
                         </div>
                     </div>
-                    <div class="form-group form-row">
-                        <label for="txtName" class="col-sm-3 col-form-label">Category name</label>
-                        <div class="col-sm">
-                            <input type="text" class="form-control" id="txtName" name="TypeName" maxlength="200" placeholder="Category name" autocomplete="off">
+                    <div class=" form-row">
+                        <label for="txtName" class="col-sm-3 col-form-label">Type name</label>
+                        <div class="col-sm form-group">
+                            <input type="text" class="form-control" id="txtName" name="TypeName" maxlength="200" placeholder="Type name" autocomplete="off">
                         </div>
                     </div>
-                    <div class="form-group form-row">
+                    <div class=" form-row">
                         <label for="txtDisplayOrder" class="col-sm-3 col-form-label">Display order</label>
-                        <div class="col-sm">
-                            <input type="text" class="form-control" id="txtDisplayOrder" name="DisplayOrder" maxlength="8" placeholder="Display order" data-value-type="number" style="width: 80px"/>
+                        <div class="col-sm form-group ">
+                            <input type="number" min="1" max="9" onkeydown="if(parseInt(this.value)>9){ this.value =9; return false; }" class="form-control" id="txtDisplayOrder" name="DisplayOrder" maxlength="8" placeholder="Display order" data-value-type="number" style="width: 80px"/>
                         </div>
                     </div>
                     <div class="form-group form-row">
@@ -88,9 +88,9 @@
                 { data: null,  render: function ( data, type, row ) {
                     return '<span class="ml_' + (data.Depth * 15) + '">' + data.TypeName + '</span>';
                 }},
-                { data: 'DisplayOrder' },
+                { data: 'DisplayOrder',className: 'text-center' },
                 { data: null,  render: function ( data, type, row ) {
-                    return '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-1"></i>' +
+                    return '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-3"></i>' +
                         '<i data-group="grpDelete" class="far fa-trash-alt text-danger pointer"></i>';
                 }}
             ],
@@ -152,7 +152,7 @@
         function loadTypes() {
             $('#drpParentId').val(null).empty().trigger('change');
             AjaxGet(api_url+'/types/get-parent-list', function(result) {
-                var optionData = [{ id: 0, text: '-----', html: '-----' }];
+                var optionData = [{ id: 0, }];
                 $.each(result.data, function (i, el) {
                     depth = el.Depth > 0 ? el.Depth + 2 : 0;
                     optionData.push({ id: el.TYPE_ID, text: el.TypeName, html: '<option class="ml-' + depth + '">' + el.TypeName + '</option>' });
@@ -183,6 +183,7 @@
 
         var validator = $('#frm').validate({
             rules: {
+                
                 TypeName: 'required',
                 DisplayOrder: {
                     required: true,
@@ -194,7 +195,19 @@
                 DisplayOrder: {
                     required: 'Please enter number.',
                     digits: 'Number is invalid!.'
-                }
+                },
+               
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+            error.addClass('invalid-feedback');
+            element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+            $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
             }
         });
 
@@ -203,7 +216,7 @@
             // check infoData edit or add new
             if (infoData != null) {
                 $('#modalAction').text('Update');
-                $('#drpParentId').val(infoData.PARENT_ID);
+                $('#drpParentId').val(infoData.PARENT_ID).trigger('change');
                 $('#hidId').val(infoData.TYPE_ID);
                 $('#txtName').val(infoData.TypeName);
                
@@ -228,7 +241,7 @@
                 if (id > 0) { // update
                     AjaxPost(api_url + '/types/update', data, function(res) {
                         if (res.error == 0) {
-                            PNotify.success({title: 'Info', text: 'Category has been updated successfully.'});
+                            PNotify.success({title: 'Info', text: 'Type has been updated successfully.'});
                             $('#editModal').modal('hide');
                             loadTable();
                             loadTypes();
@@ -239,7 +252,7 @@
                 } else { // add
                     AjaxPost(api_url + '/types/add', data, function(res) {
                         if (res.error == 0) {
-                            PNotify.success({title: 'Info', text: 'Category has been added successfully.'});
+                            PNotify.success({title: 'Info', text: 'Type has been added successfully.'});
                             $('#editModal').modal('hide');
                             loadTable();
                             loadTypes();

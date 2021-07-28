@@ -13,7 +13,7 @@ class CreateTypesTable extends Migration
      */
     public function up()
     {
-        Schema::create('Types', function (Blueprint $table) {
+        Schema::create('types', function (Blueprint $table) {
             $table->increments('TYPE_ID');
             $table->integer('PARENT_ID')->nullable();
             $table->string('TypeName');

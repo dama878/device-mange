@@ -14,7 +14,9 @@ class User extends Authenticatable
     protected $table = 'users';
     protected $primaryKey = 'USE_ID';
     public $timestamps = false;
-
+    public function role(){
+        return $this->belongsTo(Role::class,'ROLE_ID');
+    }
     /**
      * The attributes that are mass assignable.
      *

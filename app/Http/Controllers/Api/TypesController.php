@@ -8,6 +8,7 @@ use App\Models\Type;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class TypesController extends Controller
 {
@@ -67,11 +68,19 @@ class TypesController extends Controller
         //validate the info, create rules for the inputs
         $rules = array(
             'id' => 'numeric',
-            'TypeName' => 'required',
+            
+            'TypeName' => [
+                'required',
+                Rule::unique('types')
+                    ->where('IsDeleted', 0)
+            ],
             'DisplayOrder' => 'required|numeric|min:1'
         );
+        $customerMessage = [
+            'unique' => 'The type name already exists',
+        ];
         // run the validation rules on the inputs from the form
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules,$customerMessage);
         if ($validator->fails()) {
             return BaseResult::error(400, $validator->messages()->toJson());
         } else {
@@ -110,11 +119,19 @@ class TypesController extends Controller
         //validate the info, create rules for the inputs
         $rules = array(
             'id' => 'numeric',
-            'TypeName' => 'required',
+            
+            'TypeName' => [
+                'required',
+                Rule::unique('types')->where('IsDeleted', 0)->ignore(Type::find($request->input('id')))
+                    
+            ],
             'DisplayOrder' => 'required|numeric|min:1'
         );
+        $customerMessage = [
+            'unique' => 'The type name already exists',
+        ];
         // run the validation rules on the inputs from the form
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request->all(), $rules,$customerMessage);
         if ($validator->fails()) {
             return BaseResult::error(400, $validator->messages()->toJson());
         } else {
