@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Responses\BaseResult;
 use App\Models\Import;
+use App\Models\ImportDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
@@ -17,7 +18,10 @@ class ImportsController extends Controller
         if ($id) {
             $data = Import::where(['IsDeleted' => 0, 'IMP_ID' => $id])->first();
         } else {
-            $data = Import::where('IsDeleted', 0)->get();
+            $data = Import::join('customers', function ($join) {
+                $join->on('imports.CUS_ID', '=', 'customers.CUS_ID')
+                    ->where(['imports.IsDeleted' => 0, 'customers.isDeleted' => 0]);
+            })->get();
         }
         return BaseResult::withData($data);
     }
@@ -37,6 +41,7 @@ class ImportsController extends Controller
         } else {
             $user = Session::get('user');
             $import = new Import();
+            $importDetail = new ImportDetail();
             try {
                 $import->Invoice = $request->input('Invoice');
                 $import->Date = $request->input('Date');
@@ -45,9 +50,20 @@ class ImportsController extends Controller
                 $import->Place = $request->input('Place');
                 $import->Import = $request->input('Import');
                 $import->IsDeleted = 0;
-                // $import->CreatedBy = $user->USE_ID;
-
+                $import->CreatedBy = $user->USE_ID;
                 $import->save();
+
+                $importDetail->IMP_ID = $import->IMP_ID;
+                $importDetail->MOD_ID = $request->MOD_ID;
+                $importDetail->Unit = $request->Unit;
+                $importDetail->Type = $request->Type;
+                $importDetail->Quantity = $request->Quantity;
+                $importDetail->Price = $request->Price;
+                $importDetail->Note = $request->input('Note');
+                $importDetail->IsDeleted = 0;
+                $importDetail->CreatedBy = $user->USE_ID;
+                $importDetail->save();
+
                 return BaseResult::withData($import);
             } catch (\Exception $e) {
                 return BaseResult::error(500, $e->getMessage());
@@ -79,7 +95,7 @@ class ImportsController extends Controller
                     $import->Place = $request->input('Place');
                     $import->Import = $request->input('Import');
                     $import->IsDeleted = 0;
-                    // $import->UpdatedBy = $user->USE_ID;
+                    $import->UpdatedBy = $user->USE_ID;
 
                     $import->save();
                     return BaseResult::withData($import);
@@ -98,7 +114,7 @@ class ImportsController extends Controller
             $user = Session::get('user');
 
             $import->IsDeleted = 1;
-            // $import->UpdatedBy = $user->USE_ID;
+            $import->UpdatedBy = $user->USE_ID;
             $import->save();
             return BaseResult::withData($import);
         } else {

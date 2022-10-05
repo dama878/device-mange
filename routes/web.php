@@ -70,6 +70,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/internal/users/add', [UsersController::class, 'add']);
     Route::post('/internal/users/update', [UsersController::class, 'update']);
     Route::post('/internal/users/delete/{id}', [UsersController::class, 'delete']);
+    Route::get('/internal/users/exist', [UsersController::class, 'exist']);
 
     Route::get('/app/dashboard', [DashboardController::class, 'index']);
     Route::post('/logout', [UserController::class, 'destroy']);
@@ -79,7 +80,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/internal/types/add', [TypesController::class, 'add']);
     Route::post('/internal/types/update', [TypesController::class, 'update']);
     Route::post('/internal/types/delete/{id}', [TypesController::class, 'delete']);
-
+    
     Route::get('/app/device', [DeviceController::class, 'index']);
     Route::get('/internal/devices/get/{id?}', [DevicesController::class, 'get']);
     Route::post('/internal/devices/add', [DevicesController::class, 'add']);
@@ -142,7 +143,6 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/internal/fines/update', [FinesController::class, 'update']);
     Route::post('/internal/fines/delete/{id}', [FinesController::class, 'delete']);
 
-        // Export
     Route::get('app/export', [ExportController::class, 'index']);
     Route::get('/internal/exports/get/{id?}', [ExportsController::class, 'get']);
     Route::post('/internal/exports/add', [ExportsController::class, 'add']);
@@ -159,6 +159,8 @@ Route::group(['middleware' => 'auth'], function () {
     // Import
     Route::get('app/import', [ImportController::class, 'index']);
     Route::get('/internal/imports/get/{id?}', [ImportsController::class, 'get']);
+
+
     Route::post('/internal/imports/add', [ImportsController::class, 'add']);
     Route::post('/internal/imports/update', [ImportsController::class, 'update']);
     Route::post('/internal/imports/delete/{id}', [ImportsController::class, 'delete']);
@@ -166,6 +168,7 @@ Route::group(['middleware' => 'auth'], function () {
     // Import Detail
     Route::get('app/import-detail', [ImportDetailController::class, 'index']);
     Route::get('/internal/import-details/get/{id?}', [ImportDetailsController::class, 'get']);
+    Route::get('/internal/import-details/get-by-id/{id?}', [ImportDetailsController::class, 'getByID']);
     Route::post('/internal/import-details/add', [ImportDetailsController::class, 'add']);
     Route::post('/internal/import-details/update', [ImportDetailsController::class, 'update']);
     Route::post('/internal/import-details/delete/{id}', [ImportDetailsController::class, 'delete']);
@@ -176,6 +179,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/internal/customers/add', [CustomersController::class, 'add']);
     Route::post('/internal/customers/update', [CustomersController::class, 'update']);
     Route::post('/internal/customers/delete/{id}', [CustomersController::class, 'delete']);
+
 
     Route::get('/app/role', [RoleController::class, 'index']);
     Route::get('/internal/roles/get/{id?}', [RolesController::class, 'get']);

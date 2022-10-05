@@ -54,17 +54,24 @@
                             <select id="drpModelId" name="MOD_ID"></select>
                         </div>
                     </div>
-
                     <div class="form-group form-row">
                         <label for="txtUnit" class="col-sm-3 col-form-label">Unit</label>
                         <div class="col-sm">
-                            <input type="text" class="form-control" id="txtUnit" name="Unit" maxlength="50" placeholder="Unit">
+                            <select name="Unit" class="custom-select" id="txtUnit">
+                                <option value="0"> Bộ </option>
+                                <option value="1"> Cái </option>
+                                <option value="2"> Máy </option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group form-row">
                         <label for="txtType" class="col-sm-3 col-form-label">Type</label>
                         <div class="col-sm">
-                            <input type="number" class="form-control" id="txtType" name="Type">
+                            <select name="Type" class="custom-select" id="txtType">
+                                <option value="0"> Auth </option>
+                                <option value="1"> Fake 1 </option>
+                                <option value="2"> 2hand </option>
+                            </select>
                         </div>
                     </div>
                     <div class="form-group form-row">
@@ -133,7 +140,10 @@
                     data: 'Quantity'
                 },
                 {
-                    data: 'Price'
+                    title: 'Price',
+                    data: 'Price',
+                    className: "text-center",
+                    render: $.fn.dataTable.render.number(',', '.', 0, '')
                 },
                 {
                     data: 'Note'

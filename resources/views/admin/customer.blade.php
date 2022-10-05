@@ -47,14 +47,18 @@
                         </div>
                     </div>
 
-                    <div class="form-group form-row">
-                        <label for="txtDayOfBirth" class="col-sm-3 col-form-label">Day Of Birth</label>
-                        <div class="col-sm md-form md-outline input-with-post-icon datepicker">
-                            <input placeholder="Select date" type="text" id="txtDayOfBirth" name="DayOfBirth" class="form-control">
+                    <div class=" form-row">
+                        <label for="txtDayOfBirth" class="col-sm-3 col-form-label">Date</label>
+                        <div class="form-group col-sm">
+                            <div class="input-group-prepend">
+                                <button type="button" id="toggle" class="input-group-text">
+                                    <i class="fa fa-calendar-alt"></i>
+                                </button>
+                                <input type="text" class="form-control" id="txtDayOfBirth" name="DayOfBirth">
+                            </div>
                         </div>
                     </div>
 
-                    <!-- kho chứa -->
                     <div class="form-group form-row">
                         <label for="txtPhone" class="col-sm-3 col-form-label">Phone</label>
                         <div class="col-sm">
@@ -193,20 +197,17 @@
         }
 
 
-
-
-        //-----------------datimepicker-------------------
+        // chosse date
         jQuery.datetimepicker.setDateFormatter('moment')
         $('#txtDayOfBirth').datetimepicker({
-
             datepicker: true,
-
-            format: 'YYYY-MM-DD',
+            timepicker: false,
+            format: 'YYYY-MM-DD'
         })
         $('#toggle').on('click', function() {
             $('#txtDayOfBirth').datetimepicker('toggle')
         })
-        //-----------------end datimepicker-------------------
+
 
         $('#btnAdd').click(function() {
             infoData = null;
@@ -224,7 +225,17 @@
                 FullName: {
                     required: 'Please enter name.',
                 },
-
+            },
+            errorElement: 'span',
+            errorPlacement: function(error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function(element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function(element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
             }
         });
 
@@ -235,7 +246,6 @@
             // check infoData edit or add new
             if (infoData != null) {
                 $('#modalAction').text('Update');
-
                 $('#hidId').val(infoData.CUS_ID);
                 $('#txtFullName').val(infoData.FullName);
                 $('#txtDayOfBirth').val(infoData.DayOfBirth);

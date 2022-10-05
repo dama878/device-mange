@@ -28,7 +28,7 @@
 @endsection
 @section('footer')
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modalTitle" aria-hidden="true">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg   " role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span> User</h5>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <div class=" form-row">
-                        <label for="txtUsername" class="col-sm-3 col-form-label">username</label>
+                        <label for="txtUsername" class="col-sm-3 col-form-label">User Name</label>
                         <div class="col-sm form-group">
                             <input type="text" class="form-control" id="txtUsername" name="username" maxlength="200" placeholder="Address" autocomplete="off">
                         </div>
@@ -73,9 +73,9 @@
                          
 
                     <div class=" form-row">
-                        <label for="txtpassword" class="col-sm-3 col-form-label">password</label>
+                        <label for="password" class="col-sm-3 col-form-label">password</label>
                         <div class="col-sm form-group">
-                            <input type="password" class="form-control  @error('password') is-invalid @enderror" id="txtpassword" name="password" maxlength="200" placeholder="Password" required autocomplete="current-password">
+                            <input type="password" class="form-control  @error('password') is-invalid @enderror" id="password" name="password" maxlength="200" placeholder="Password" required autocomplete="current-password">
                             @error('password')
                             <span class="invalid-feedback" role="alert">
                                 <strong>{{ $message }}</strong>
@@ -86,7 +86,7 @@
                     <div class=" form-row">
                         <label for="txtConPassword" class="col-sm-3 col-form-label">Confirm password</label>
                         <div class="col-sm form-group">
-                            <input type="password" class="form-control @error('password') is-invalid @enderror"  id="txtpassword" name="password_confirmation" maxlength="200" placeholder="password_confirmation" required autocomplete="current-password">
+                            <input type="password" class="form-control @error('password') is-invalid @enderror"  id="password_confirmation" name="password_confirmation" maxlength="200" placeholder="password_confirmation" required autocomplete="current-password">
                         </div>
                     </div>
                     <div class="form-group form-row">
@@ -153,7 +153,27 @@
                     <div class=" form-row">
                         <label for="txtStatus" class="col-sm-3 col-form-label">Status</label>
                         <div class="col-sm form-group">
-                            <input type="number" min="1" max="9" onkeydown="if(parseInt(this.value)>9){ this.value =9; return false; }" class="form-control" id="txtStatus" name="Status" autocomplete="off">
+                            <div class="col-sm">
+                                <div class="d-inline mr-5">
+                                    <input type="radio" id="radioOnline" name="Status" value="1">
+                                    <label for="radioMaleGender">
+                                        Online
+                                    </label>
+                                </div>
+                                <div class="d-inline mr-5">
+                                    <input type="radio" id="radioOffline" name="Status" value="0">
+                                    <label for="radioFemaleGender">
+                                        Offline
+                                    </label>
+                                </div>
+                                <div class="d-inline">
+                                    <input type="radio" id="radioAFK" name="Status" value="2">
+                                    <label for="radioFemaleGender">
+                                        AFK
+                                    </label>
+                                </div>
+                            </div>
+                            {{-- <input type="number" min="1" max="9" onkeydown="if(parseInt(this.value)>9){ this.value =9; return false; }" class="form-control" id="txtStatus" name="Status" autocomplete="off"> --}}
                         </div>
                     </div>
                     
@@ -234,8 +254,9 @@
                         AjaxPost(api_url + '/users/delete/' + rowId, null, function (result) {
                             if (result.error == 0) {
                                 tbl.row('#' + rowId).remove().draw();
-                                var content = 'users' + ' "' + result.data.ManName + '" has been deleted!';
+                                var content = 'users' + ' "' + result.data.username + '" has been deleted!';
                                 PNotify.success({title: 'Info', text: content});
+                                
                             } else {
                                 PNotify.alert({title: 'Warning', text: result.message});
                             }
@@ -316,6 +337,7 @@ $('#txtDOB').datetimepicker({
 
         var validator = $('#frm').validate({
             rules: {
+                
                ROLE_ID : {
                     required: true,
                 },
@@ -323,8 +345,22 @@ $('#txtDOB').datetimepicker({
                     required: true,
                     minlength: 6
                 },
+                password_confirmation: {
+                    equalTo: "#password"
+
+                },
                 username:{
                     required: true,
+                    remote:{
+                        url: api_url+'/users/exist',
+                        type: "GET",
+                        contentType: 'application/json; charset=utf-8',
+                        data: {
+                            id :function() {
+                            return $('#hidId').val();
+                        }
+                        }
+                    }
                 },
                 Phone:{
                     required: true,
@@ -349,7 +385,8 @@ $('#txtDOB').datetimepicker({
                     confirm: 'The password confirmation does not match'
                 },
                 username: {
-                    required : 'Please enter User Name'
+                    required : 'Please enter User Name',
+                    remote: 'the name allready exist'
                 },
                 Status:{
                     required: 'Please enter Status',
@@ -374,14 +411,15 @@ $('#txtDOB').datetimepicker({
             // check infoData edit or add new
             if (infoData != null) {
                 $('#modalAction').text('Update');
-
+                console.log(infoData);
                 $('#hidId').val(infoData.USE_ID);
                 
-                $('#drpROLE_ID').val(infoData.ROLE_ID);
+                $('#drpROLE_ID').val(infoData.ROLE_ID).trigger('change');
                 $('#txtUsername').val(infoData.username);
                 $('#txtFirstName').val(infoData.FirstName);
                 $('#txtLastName').val(infoData.LastName);
-                $('#txtpassword').val('');
+                $('#password').val(infoData.password).trigger('change');
+                $('#password_confirmation').val(infoData.password).trigger('change');
                 $('#txtGender').val(infoData.Gender);
                 $('#txtAddress').val(infoData.Address);
                 $('#txtEmail').val(infoData.Email);
@@ -429,7 +467,7 @@ $('#txtDOB').datetimepicker({
                         }
                     });
                 } else { // ad
-                    console.log(data);
+                    // console.log(data);
                     AjaxPost(api_url + '/users/add', data, function(res) {
                         if (res.error == 0) {
                             PNotify.success({title: 'Info', text: 'User has been added successfully.'});

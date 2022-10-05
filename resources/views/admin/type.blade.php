@@ -13,7 +13,7 @@
                 <thead>
                     <th style="width: 40px;">#</th>
                     <th>Name</th>
-                    <th>Display Order</th>
+                    {{-- <th>Display Order</th> --}}
                     <th style="width: 60px"></th>
                 </thead>
                 <tbody></tbody>
@@ -88,7 +88,7 @@
                 { data: null,  render: function ( data, type, row ) {
                     return '<span class="ml_' + (data.Depth * 15) + '">' + data.TypeName + '</span>';
                 }},
-                { data: 'DisplayOrder',className: 'text-center' },
+                // { data: 'DisplayOrder',className: 'text-center' },
                 { data: null,  render: function ( data, type, row ) {
                     return '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-3"></i>' +
                         '<i data-group="grpDelete" class="far fa-trash-alt text-danger pointer"></i>';

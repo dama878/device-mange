@@ -15,7 +15,7 @@
                     <th>Name</th>
                     <th>Adress</th>
                     <th>Note</th>
-                    <th>Display Order</th>
+                    {{-- <th>Display Order</th> --}}
                     <th style="width: 60px"></th>
                 </thead>
                 <tbody></tbody>
@@ -80,13 +80,13 @@
 <script>
     $(document).ready(function(){
         var tbl = $('#tbl').DataTable({
-            columnDefs: [{ orderable: false, targets: [0,2,3,5] }],
+            columnDefs: [{ orderable: false, targets: [0,2,3] }],
             aLengthMenu: [
                 [10, 25, 50, 100, -1],
                 [10, 25, 50, 100, '---']
             ],
             iDisplayLength: 50,
-            order: [[1, 'asc'],[4,'asc']],
+            order: [1, 'asc'],
             aaData: null,
             rowId: 'MAN_ID',
             columns: [
@@ -94,7 +94,7 @@
                 { data: 'ManName',className: 'text-center' },
                 { data: 'Address',className: 'text-center' },
                 { data: 'Note',className: 'text-center' },
-                { data: 'DisplayOrder',className: 'text-center' },
+                // { data: 'DisplayOrder',className: 'text-center' },
                 { data: null,  render: function ( data, type, row ) {
                     return '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-3"></i>' +
                         '<i data-group="grpDelete" class="far fa-trash-alt text-danger pointer"></i>';

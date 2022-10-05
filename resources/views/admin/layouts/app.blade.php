@@ -264,6 +264,7 @@
         @yield('content')
       </div><!-- /.container-fluid -->
     </div>
+    
     <!-- /.content -->
   </div>
   <!-- /.content-wrapper -->
@@ -304,6 +305,8 @@
 
 <!-- date-range-picker -->
 <script src="{{url('/public/admin')}}/plugins/daterangepicker/daterangepicker.js"></script>
+<!-- ckeditor -->
+<script src="{{url('/public/admin')}}/plugins/ckeditor/ckeditor.js"></script>
 <!-- jQuery Validation -->
 <script src="{{url('/public/admin')}}/plugins/jquery-validation/jquery.validate.min.js"></script>
 {{-- jquery serializeJSON --}}

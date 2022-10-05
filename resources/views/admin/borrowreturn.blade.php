@@ -68,9 +68,11 @@
     <script>
         jQuery.datetimepicker.setDateFormatter('moment')
         $('#txtDate').datetimepicker({
+            timepicker: true,
             datepicker: true,
-            timepicker: false,
-            format: 'YYYY-MM-DD'
+            hours12: false,
+            step: 15,
+            format: 'YYYY-MM-DD HH:mm',
         })
         $('#toggle').on('click', function() {
             $('#txtDate').datetimepicker('toggle')
@@ -96,7 +98,7 @@
                     {
                         data: null,
                         render: function(data, type, row) {
-                            return '<span>' + data.FirstName + ' ' + data.LastName + '</span>';
+                            return '<span>' + data.LastName + ' ' + data.FirstName + '</span>';
                         }
                     },
                     {
@@ -193,7 +195,8 @@
                         optionData.push({
                             id: el.BORROWER_ID,
                             text: el.FirstName,
-                            html: '<option class="">' + el.FirstName  + ' ' + el.LastName + '</option>'
+                            html: '<option class="">' + el.FirstName + ' ' + el.LastName +
+                                '</option>'
                         });
                     });
 
@@ -252,7 +255,7 @@
                 if (infoData != null) {
                     $('#modalAction').text('Update');
                     $('#hidId').val(infoData.BORETURN_ID);
-                    $('#drpBORROWER_ID').val(infoData.BORROWER_ID);
+                    $('#drpBORROWER_ID').val(infoData.BORROWER_ID).trigger('change');
                     $('#txtDate').val(infoData.Date);
                 } else {
                     $('#modalAction').text('New');

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Responses\BaseResult;
 use Illuminate\Http\Request;
 use App\Models\Borrow;
+use App\Models\BorrowDetailModel;
 use Illuminate\Support\Facades\Validator;   
 
 class BorrowsController extends Controller
@@ -38,6 +39,7 @@ class BorrowsController extends Controller
         } else {
            //  $user = Session::get('user');
             $borrow = new Borrow();
+            $borrowdetaildetail = new BorrowDetailModel();
             try {
                 $borrow->BORROWER_ID = $request->BORROWER_ID;
                 $borrow->Date = $request->Date;
@@ -45,10 +47,21 @@ class BorrowsController extends Controller
                 $borrow->CreatedDate = now();
               //  $borrow->CreatedBy = $user->USE_ID;
                 $borrow->save();
-                if($request->MOD_ID!=null){
-                    $modelIds=array_values($request->MOD_ID);
-                    $borrow->models()->sync($modelIds);
-                }
+                    $borrowdetaildetail->MOD_ID = 4;
+                    $borrowdetaildetail->BOR_ID = $borrow->BOR_ID;
+                    $borrowdetaildetail->BORETURN_ID = 1;
+                    $borrowdetaildetail->DueDateReturn = $request->DueDateReturn;
+                    $borrowdetaildetail->DateReturn = $request->DateReturn;
+                    $borrowdetaildetail->IsRenew = $request->has('IsRenew') ? true : false; 
+                    $borrowdetaildetail->IsDeleted = 0;
+                    $borrowdetaildetail->CreatedDate = now();
+                    // $category->CreatedBy = $user->USE_ID;
+
+                    $borrowdetaildetail->save();
+                // if($request->MOD_ID!=null){
+                //     $modelIds=array_values($request->MOD_ID);
+                //     $borrow->models()->sync($modelIds);
+                // }
                 return BaseResult::withData($borrow);
             } catch (\Exception $e) {
                 return BaseResult::error(500, $e->getMessage());

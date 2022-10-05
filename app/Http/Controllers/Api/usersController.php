@@ -63,7 +63,7 @@ class UsersController extends Controller
                 $user->Address = $request->Address;
                 $user->Phone = $request->Phone;
                 $user->Email = $request->Email;
-                $user->Password = bcrypt($request->password) ;
+                $user->password = bcrypt($request->password) ;
                 $user->Gender = $request->Gender;
                 $user->Status = $request->Status;
                 $user->DOB = $request->DOB;
@@ -115,7 +115,7 @@ class UsersController extends Controller
                     $user->Address = $request->Address;
                     $user->Phone = $request->Phone;
                     $user->Email = $request->Email;
-                    $user->Password = bcrypt($request->password) ;
+                    $user->password = bcrypt($request->password) ;
                     $user->Gender = $request->Gender;
                     $user->Status = $request->Status;
                     $user->DOB = $request->DOB;
@@ -125,7 +125,7 @@ class UsersController extends Controller
                     $user->UpdatedDate = now();
                     $user->UpdatedBy = $user->USE_ID;
 
-                    $user->save();
+                    $user->update();
 
 
                     return BaseResult::withData($user);
@@ -151,5 +151,11 @@ class UsersController extends Controller
         } else {
             return BaseResult::error(404, 'Không tìm thấy dữ liệu!.');
         }
+    }
+
+    public function exist(Request $request){
+        $exist=User::where(['IsDeleted'=>0,'username'=>$request->get('username')])->where('USE_ID','<>',$request->get('id'))->get();
+        if($exist->count()>0) return 'false';
+        return 'true';
     }
 }

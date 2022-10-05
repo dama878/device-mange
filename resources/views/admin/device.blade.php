@@ -33,7 +33,7 @@
                     <th>Manufacturer</th>
                     <th>Status</th>
                     
-                    <th>Image</th>
+                    {{-- <th>Image</th> --}}
                     <th>Display Order</th>
                     <th style="width: 60px"></th>
                 </thead>
@@ -44,7 +44,7 @@
 @endsection
 @section('footer')
 <div class="modal fade" id="editModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modalName" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalName"><i class="fa fa-info"></i> <span id="modalAction"></span> Device</h5>
@@ -107,10 +107,36 @@
                                     
                                 </div>
                             </div>
-                            <div class=" form-row">
+                            {{-- <div class=" form-row">
                                 <label for="txtStatus" class="col-sm-3 col-form-label">Device Status</label>
                                 <div class="col-sm form-group">
                                     <input type="number" min="1" max="9" onkeydown="if(parseInt(this.value)>9){ this.value =9; return false; }" class="form-control" id="txtStatus" name="Status" maxlength="200" placeholder="Device Status" autocomplete="off">
+                                </div>
+                            </div> --}}
+                            <div class=" form-row">
+                                <label for="txtStatus" class="col-sm-3 col-form-label">Status</label>
+                                <div class="col-sm form-group">
+                                    <div class="col-sm">
+                                        <div class="d-inline mr-5">
+                                            <input type="radio" id="radioOnline" name="Status" value="1">
+                                            <label for="radioMaleGender">
+                                                Maintenance
+                                            </label>
+                                        </div>
+                                        <div class="d-inline mr-5">
+                                            <input type="radio" id="radioOffline" name="Status" value="0">
+                                            <label for="radioFemaleGender">
+                                                Normal
+                                            </label>
+                                        </div>
+                                        <div class="d-inline">
+                                            <input type="radio" id="radioAFK" name="Status" value="2">
+                                            <label for="radioFemaleGender">
+                                                Failure
+                                            </label>
+                                        </div>
+                                    </div>
+                                    {{-- <input type="number" min="1" max="9" onkeydown="if(parseInt(this.value)>9){ this.value =9; return false; }" class="form-control" id="txtStatus" name="Status" autocomplete="off"> --}}
                                 </div>
                             </div>
                             <div class="form-group form-row">
@@ -209,7 +235,7 @@
                         <div class="form-group form-row">
                             <label for="txtDetail" class="col-sm-3 col-form-label">Device Detail</label>
                             <div class="col-sm">
-                                <textarea rows="5" type="text" class="form-control" id="txtDetail" name="Detail" maxlength="200" placeholder="Device Detail" autocomplete="off"></textarea>
+                                <textarea rows="5"  class="form-control" id="txtDetail" name="Detail" maxlength="200" placeholder="Device Detail" autocomplete="off">&lt;p&gt;Initial editor content.&lt;/p&gt;</textarea>
                             </div>
                         </div>
                     </div>
@@ -228,9 +254,24 @@
 @endsection
 @section('js')
 <script>
+    CKEDITOR.replace("txtDetail", {
+            toolbar: [
+                { name: 'tools', items: [ 'Maximize', 'ShowBlocks', 'Source' ] },
+                { name: 'document', groups: [ 'mode', 'document', 'doctools' ], items: [ 'Preview', '-', 'Templates' ] },
+                { name: 'clipboard', groups: [ 'clipboard', 'undo' ], items: [ 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo' ] },
+                { name: 'editing', groups: [ 'find', 'selection' ], items: [ 'Find', 'Replace', '-', 'SelectAll' ] },
+                { name: 'insert', items: [ 'Image', 'Table', 'HorizontalRule', 'Flash' ] },
+                { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+                { name: 'colors', items: [ 'TextColor', 'BGColor' ] },
+                '/',
+                { name: 'styles', items: [ 'Format', 'Font', 'FontSize' ] },
+                { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ], items: [ 'Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'CopyFormatting', 'RemoveFormat' ] },
+                { name: 'paragraph', groups: [ 'list', 'indent', 'blocks', 'align', 'bidi' ], items: [ 'NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock' ] },
+            ]
+        });
     $(document).ready(function(){
         var tbl = $('#tbl').DataTable({
-            columnDefs: [{ orderable: false, targets: [0, 2,3,4,5,6,7] }],
+            columnDefs: [{ orderable: false, targets: [0, 2,3,4,5,6,] }],
             // columnDefs: [{ orderable: false, targets: [0, 2, 5,6,7] }],
             aLengthMenu: [
                 [10, 25, 50, 100, -1],
@@ -247,9 +288,9 @@
                 { data: 'ManName',className: 'text-center'  },
                 { data: 'Status', className: 'text-center' },
                 
-                { data: null,  className: 'text-center',render: function ( data, type, row ) {
-                    return '<img style=" margin-left: auto; margin-right: auto;" width="100" height="50" class="img-fluid" src="' + base_url + '/public/data/devices/' + data.Img + '"/>';
-                }},
+                // { data: null,  className: 'text-center',render: function ( data, type, row ) {
+                //     return '<img style=" margin-left: auto; margin-right: auto;" width="100" height="50" class="img-fluid" src="' + base_url + '/public/data/devices/' + data.Img + '"/>';
+                // }},
                 { data: 'DisplayOrder',className: 'text-center' },
                 { data: null,  render: function ( data, type, row ) {
                     return '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-3"></i>' +
@@ -295,7 +336,7 @@
                         AjaxPost(api_url + '/devices/delete/' + rowId, null, function (result) {
                             if (result.error == 0) {
                                 tbl.row('#' + rowId).remove().draw();
-                                var content = 'Device' + ' "' + result.data.Name + '" has been deleted!';
+                                var content = 'Device' + ' "' + result.data.DevName + '" has been deleted!';
                                 PNotify.success({title: 'Info', text: content});
                             } else {
                                 PNotify.alert({title: 'Warning', text: result.message});
@@ -319,6 +360,13 @@
                 })
 
         //-------------- end :filter----------------//
+        
+
+        //---------------start :ck editor-------------//
+       
+        // CKEDITOR.replace('txtDetail');
+         
+          //---------------start :ck end-------------//   
 
 
         //---------------date range --------------//
@@ -387,7 +435,7 @@
 
         loadTypes();
         function loadTypes() {
-            $('#drpTYPE_ID').val(null).empty().trigger('change');
+            $('#drpTYPE_ID').val(null).empty();
             AjaxGet(api_url+'/types/get', function(result) {
                 var optionData = [{ id: 0,text: '------', html: '----' }];
                 $.each(result.data, function (i, el) {
@@ -416,7 +464,7 @@
 
         loadManufacturers();
         function loadManufacturers() {
-            $('#drpMAN_ID').val(null).empty().trigger('change');
+            $('#drpMAN_ID').val(null).empty();
             AjaxGet(api_url+'/manufacturers/get', function(result) {
                 var optionData = [{ id: 0,text: '------', html: '----'}];
                 $.each(result.data, function (i, el) {
@@ -517,7 +565,7 @@
                 $('#txtKeyWord').val(infoData.KeyWord);
                 $('#txtStatus').val(infoData.Status);
                 $('#txtSerialNumber').val(infoData.SerialNumber);
-                $('#txtDetail').val(infoData.Detail);
+                CKEDITOR.instances['txtDetail'].setData(infoData.Detail);
                 $('#txtGuaranteeStart').val(infoData.GuaranteeStart);
                 $('#txtGuaranteeEnd').val(infoData.GuaranteeEnd);
                 $('#txtDisplayOrder').val(infoData.DisplayOrder);
@@ -541,7 +589,7 @@
                 $('#txtKeyWord').val('');
                 $('#txtStatus').val('');
                 $('#txtSerialNumber').val('');
-                $('#txtDetail').val('');
+                CKEDITOR.instances['txtDetail'].setData('');
                 $('#txtGuaranteeStart').val('');
                 $('#txtGuaranteeEnd').val('');
                 
@@ -560,7 +608,7 @@
                 // save data
                 var form = $("#frm")[0]; // high importance!, here you need change "yourformname" with the name of your form
                 var formdata = new FormData(form); // high importance! 
-                data = $('#frm').serializeJSON();
+                formdata.append('Detail',CKEDITOR.instances['txtDetail'].getData());
                 id = $('#hidId').val();
                 if (id > 0) { // update
                     AjaxPostForm(api_url + '/devices/update', formdata, function(res) {
@@ -573,7 +621,7 @@
                         }
                     });
                 } else { // add
-                    console.log(data);
+                    // console.log(data);
                     AjaxPostForm(api_url + '/devices/add', formdata, function(res) {
                         if (res.error == 0) {
                             PNotify.success({title: 'Info', text: 'Device has been added successfully.'});

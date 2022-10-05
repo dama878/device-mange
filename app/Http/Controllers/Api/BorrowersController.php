@@ -36,7 +36,7 @@ class BorrowersController extends Controller
             'LastName' => 'required',
             'Phone' => 'required',
             'Email' => 'required',
-            'Note' => 'required'
+            'BorrowerID' => 'required'
         );
         // run the validation rules on the inputs from the form
         $validator = Validator::make($request->all(), $rules);
@@ -47,6 +47,7 @@ class BorrowersController extends Controller
             $borrower = new Borrower();
             try {
                 $borrower->BOGROUP_ID = $request->input('BOGROUP_ID');
+                $borrower->BorrowerID = $request->input('BorrowerID');
                 $borrower->FirstName = $request->input('FirstName');
                 $borrower->LastName = $request->input('LastName');
                 $borrower->Phone = $request->input('Phone');
@@ -82,7 +83,7 @@ class BorrowersController extends Controller
             'LastName' => 'required',
             'Phone' => 'required',
             'Email' => 'required',
-            'Note' => 'required'
+            'BorrowerID' => 'required'
 
         );
         // run the validation rules on the inputs from the form
@@ -95,6 +96,7 @@ class BorrowersController extends Controller
             if ($borrower) {
                 try {
                     $borrower->BOGROUP_ID = $request->input('BOGROUP_ID');
+                    $borrower->BorrowerID = $request->input('BorrowerID');
                     $borrower->FirstName = $request->input('FirstName');
                     $borrower->LastName = $request->input('LastName');
                     $borrower->Phone = $request->input('Phone');
@@ -146,5 +148,12 @@ class BorrowersController extends Controller
         } else {
             return BaseResult::error(404, 'Không tìm thấy dữ liệu!.');
         }
+    }
+    public function exist(Request $request)
+    {
+        $exist = Borrower::where(['IsDeleted' => 0, 'BorrowerID' => $request->get('BorrowerID')])
+            ->where('BorrowerID', '<>', $request->get('id'))->get();
+        if ($exist->count() > 0) return 'false';
+        return 'true';
     }
 }

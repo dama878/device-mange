@@ -20,6 +20,9 @@ class ExportDetailsController extends Controller
             $data = ExportDetail::join('exports', function ($join) {
                 $join->on('exports.EXP_ID', '=', 'export_details.EXP_ID')
                     ->where(['exports.IsDeleted' => 0, 'export_details.isDeleted' => 0]);
+            })->join('models', function ($join) {
+                $join->on('models.MOD_ID', '=', 'export_details.MOD_ID')
+                    ->where(['models.IsDeleted' => 0, 'export_details.isDeleted' => 0]);
             })->get();
         }
         return BaseResult::withData($data);
@@ -50,7 +53,7 @@ class ExportDetailsController extends Controller
                 $exportDetail->Price = $request->Price;
                 $exportDetail->Note = $request->input('Note');
                 $exportDetail->IsDeleted = 0;
-                // $exportDetail->CreatedBy = $user->USE_ID;
+                $exportDetail->CreatedBy = $user->USE_ID;
 
                 $exportDetail->save();
                 return BaseResult::withData($exportDetail);
@@ -86,7 +89,7 @@ class ExportDetailsController extends Controller
                     $exportDetail->Price = $request->Price;
                     $exportDetail->Note = $request->input('Note');
                     $exportDetail->IsDeleted = 0;
-                    // $exportDetail->CreatedBy = $user->USE_ID;
+                    $exportDetail->CreatedBy = $user->USE_ID;
 
                     $exportDetail->save();
                     return BaseResult::withData($exportDetail);
@@ -106,7 +109,7 @@ class ExportDetailsController extends Controller
             $user = Session::get('user');
 
             $exportDetail->IsDeleted = 1;
-            // $exportDetail->UpdatedBy = $user->USE_ID;
+            $exportDetail->UpdatedBy = $user->USE_ID;
             $exportDetail->save();
             return BaseResult::withData($exportDetail);
         } else {

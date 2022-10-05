@@ -133,7 +133,7 @@ class DevicesController extends Controller
                     $device->UpdatedDate = now();
                     $device->UpdatedBy = $user->USE_ID;
 
-                    $device->save();
+                    $device->update();
 
                     if ($request->hasFile('Img')) {
                         

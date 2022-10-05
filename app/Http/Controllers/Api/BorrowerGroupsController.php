@@ -28,6 +28,7 @@ class BorrowerGroupsController extends Controller
         //validate the info, create rules for the inputs
         $rules = array(
             'id' => 'numeric',
+            // 'Name' => 'required'
             'Name' => [
                 'required',
                 Rule::unique('borrower_groups')->where('IsDeleted', 0)
@@ -59,11 +60,12 @@ class BorrowerGroupsController extends Controller
         //validate the info, create rules for the inputs
         $rules = array(
             'id' => 'numeric',
-            'Name' => [
-                'required',
-                Rule::unique('borrower_groups')->where('IsDeleted', 0)
-                    ->ignore(BorrowerGroup::find($request->input('id')))
-            ],
+            'Name' => 'required'
+            // 'Name' => [
+            //     'required',
+            //     Rule::unique('borrower_groups')->where('IsDeleted', 0)
+            //         ->ignore(BorrowerGroup::find($request->input('id')))
+            // ],
         );
         // run the validation rules on the inputs from the form
         $validator = Validator::make($request->all(), $rules);
@@ -105,5 +107,12 @@ class BorrowerGroupsController extends Controller
         } else {
             return BaseResult::error(404, 'Không tìm thấy dữ liệu!.');
         }
+    }
+    public function exist(Request $request)
+    {
+        $exist = BorrowerGroup::where(['IsDeleted' => 0, 'Name' => $request->get('Name')])
+            ->where('BOGROUP_ID', '<>', $request->get('id'))->get();
+        if ($exist->count() > 0) return 'false';
+        return 'true';
     }
 }

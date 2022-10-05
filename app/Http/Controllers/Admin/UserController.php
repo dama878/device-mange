@@ -31,6 +31,7 @@ class UserController extends Controller
 				if ($user->IsLocked == false) {
 					if (Auth::attempt($userdata)) {
 						Session::put('user', Auth::user());
+                        
 						return Redirect::action([DashboardController::class, 'index']);
 					}
 				}
@@ -85,6 +86,7 @@ class UserController extends Controller
     public function destroy(Request $request)
     {
         Auth::logout();
+        
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         Cookie::queue(Cookie::forget('userCredential'));

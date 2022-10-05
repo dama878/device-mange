@@ -11,7 +11,7 @@
             <div class="card-body">
                 <table id="tbl" class="table table-bordered table-hover table-triped">
                     <thead>
-                        <th style="width: 40px">#</th>
+                        <th style="width: 20px">#</th>
                         <th>Borrower Name</th>
                         <th>Model Name</th>
                         <th>Borrow Date</th>
@@ -107,7 +107,7 @@
             columns: [
                 { data: null, className: 'text-center'},
                 { data: null,  render: function ( data, type, row ) {
-                    return '<span>' + data.FirstName + ' ' + data.LastName +'</span>';
+                    return '<span>' + data.LastName+ ' ' + data.FirstName  +'</span>';
                 }},
                 { data: 'NameModel' },
                 { data: 'Date' },

@@ -12,7 +12,7 @@
                 <table id="tbl" class="table table-bordered table-hover table-triped">
                     <thead>
                         <th style="width: 40px">#</th>
-                        <th style="width: 20px"></th>
+                     <!--   <th style="width: 20px"></th> -->
                         <th>Borrower Name</th>
                         <th>Date Borrow</th>
                         <th></th>
@@ -24,52 +24,93 @@
 @endsection
 @section('footer')
     {{-- Modal borrow --}}
-    <div class="modal fade" id="editModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modalTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    <div class="modal fade " id="editModal" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-xl " role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span>Add Borrow</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                 <div class="modal-header">
+                    <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span> Borrow</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"> 
+                       <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" id="frm" enctype="multipart/form-data">
-                        <input type="hidden" id="hidId" name="id" data-value-type="number"/>
-                        
-                        <div class=" form-row">
-                            <label for="drpBorrowerId" class="col-sm-3 col-form-label">Borrower Name</label>
-                            <div class="form-group col-sm">
-                                <select id="drpBorrowerId" name="BORROWER_ID"></select>
+                    <div class="row">
+                        <div class="col-sm-4">
+                        <form method="post" id="frm" enctype="multipart/form-data">
+                            <input type="hidden" id="hidId" name="id" data-value-type="number"/>
+                            <div class=" form-row">
+                                <label for="drpBorrowerId" class="col-sm-4 col-form-label">Borrower Name </label>
+                                <div class="form-group col-sm">
+                                    <select id="drpBorrowerId" name="BORROWER_ID"></select>
+                                </div>
+                            </div>
+                            <div class="form-group form-row">
+                                <label for="Date" class="col-sm-4 col-form-label">Date borrow</label>
+                                <div class="col-sm">
+                                    <input type="text" name="Date" id="txtDate" class="form-control" 
+                                    maxlength="200" placeholder="Enter date" autocomplete="off">
+                                </div>
                             </div>
                         </div>
-                        <div class="form-group form-row">
-                            <label for="Date" class="col-sm-3 col-form-label">Date borrow</label>
-                            <div class="col-sm">
-                                <input type="text" name="Date" id="txtDate" class="form-control" 
-                                maxlength="200" placeholder="Enter date" autocomplete="off">
+                    
+                 <!--   <div class="modal-content">                   
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span>Add Detail</h5> 
+                            <button type="button" class="btn btn-success" data-dismiss="modal">Add Detail</button>
+                        </div>
+                    -->
+                   <div class="col-sm-8">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <h4 class="text-success">
+                                    <i class="fas fa-list-ul "></i>
+                                    Borrow Model Detail
+                                </h4>
                             </div>
-                        </div> 
-                        {{-- <div class="form-row">
-                            <label for="drpModelId" class="col-sm-3 col-form-label" >Multiple Model</label>
-                            <div class="form-group col-sm">
-                            <select class="select2" name="MOD_ID[]" id="drpModelId" multiple="multiple" style="width: 100%;">
-                            </select>
-                            </div>
-                        </div> --}}
-                    </form>
+                            <div class="col-sm-6">
+                                <button id="btnAddModelDetail" type="button" class="float-right btn btn-success ml-2">
+                                <i class="fas fa-plus mr-2"></i>Add Model Detail</button>
+                            </div> 
+                        </div>
+                    </div>
+                    <div class="card-body border">
+                                    <div id="show-body">
+                                       
+                                        <input type="hidden" id="hidIdDetail" name="BORDE_ID" data-value-type="number"/>
+                                        {{-- <input type="hidden" id="drpModelIdDetails" name="MOD_ID" class="form-control"/> --}}
+                                        <table class="table table-bordered" id="detail_table">
+                                            <thead>
+                                              <tr>
+                                                  <div class="row">
+                                                    <th scope="col">#</th>
+                                                    <th>Name Model</th> 
+                                                    <th>Due date return</th>
+                                                    {{-- <th>Date return</th> --}}
+                                                    <th>Is renew</th>
+                                                    <th>Action</th>
+                                                  </div>
+                                              </tr>
+                                            </thead>
+                                            <tbody id="tbody"></tbody>
+                                        </table>    
+                                    </div>
+                                </div>
+                    </div>       
+                     </form>
+                    </div>                
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" id="btnSaveModal" class="btn btn-primary">Save</button>
+                    <button type="button" id="btnSaveModal" class="btn btn-success">Save</button>
                 </div>
             </div>
         </div>
     </div>
 
     {{-- Modal borrow detail  --}}
-    <div class="modal fade" id="editModalDetail" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modalTitle" aria-hidden="true">
-        <div class="modal-dialog" role="document">
+    {{-- <div class="modal fade" id="editModalDetail" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="modalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-full" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTitle"><i class="fa fa-info"></i> <span id="modalAction"></span> Details Borrow</h5>
@@ -102,11 +143,11 @@
                             <select id="drpBoReturn" name="BORETURN_ID" class="form-control">
                             </select>
                             </div>
-                            </div>
+                        </div>
 
                         <div class="form-row">
                             <label for="txtDueDate" class="col-sm-4 col-form-label">Due Date Return</label>
-                            <div class="form-group col-sm">
+                         <div class="form-group col-sm">
                                 <input type="text" class="form-control" id="txtDueDate" name="DueDateReturn" maxlength="200" autocomplete="off">
                             </div>
                         </div>
@@ -130,13 +171,14 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 @section('js')
 <script>
+    var counter=1;
     $(document).ready(function(){
         var tbl= $('#tbl').DataTable({
-            columnDefs: [{ orderable: false, targets: [0, 1, 4] }],
+            columnDefs: [{ orderable: false, targets: [0, 1, 3] }],
             aLengthMenu: [
                 [10, 25, 50, 100, -1],
                 [10, 25, 50, 100, '---']
@@ -147,18 +189,16 @@
             rowId: 'BOR_ID',
             columns: [
                 { data: null, className: 'text-center'},
-                { data : null, render: function (data, type, row) {
-                            return '<i data-group="grpDetail" class="fas fa-plus-circle text-success pointer mr-1"></i>';
-                }},
                 {
                     data: null,
                     render: function(data, type, row) {
-                        return '<span>' + data.FirstName + ' ' + data.LastName + '</span>';
+                        return '<span>' + data.LastName + ' ' + data.FirstName + '</span>';
                     }
                 },
                 { data: 'Date' },
                 { data: null,  render: function ( data, type, row ) {
-                    return '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-1"></i>' +
+                    return '<i data-group="grpDetail" class="fas fa-table text-success pointer mr-1"></i>'+
+                    '<i data-group="grpEdit" class="fas fa-edit text-info pointer mr-1"></i>' +
                         '<i data-group="grpDelete" class="far fa-trash-alt text-danger pointer"></i>';
                 }}
             ],
@@ -175,6 +215,7 @@
                 $('td:eq(0)', row).html(index);
             }
         });
+
         //load Table
         function loadTable(){
             AjaxGet(api_url + '/borrows/get', function (result) {
@@ -250,6 +291,7 @@
 
             // Display it the child row
             row.child( table ).show();
+            var parentId = id;
             // Initialise as a DataTable
             var usersTable = table.DataTable( {
                 ajax: {
@@ -278,10 +320,16 @@
                     { title: '#', data: 'BORDE_ID', className: 'text-center' },
                     { title: 'Model name', data: 'NameModel' },
                     { title: 'Borrow date', data: 'Date' },
-                    { title: 'Borrower return', data: 'BORETURN_ID' },
-                    { title: 'Due date', data: 'DueDateReturn' },
-                    { title: 'Date', data: 'DateReturn' },
-                    { title: 'Is renew', data: 'IsRenew' },
+                    //{ title: 'Borrower return', data: 'BORETURN_ID' },
+                    { title: 'Due date return', data: 'DueDateReturn' },
+                   // { title: 'Date', data: 'DateReturn' },
+                    { title: 'Is renew', data: 'IsRenew', render: function (data, type, row) {
+                    if(data=="true"){
+                      return '<i class="far fa-check-circle text-success"></i>';
+                    }
+                    else
+                      return '';
+                    }},
                     { title: 'Action', data: null,  render: function ( data, type, row ) {
                             return '<i data-group="grpEditDetail" class="fas fa-edit text-info pointer mr-1"></i>' +
                                 '<i data-group="grpDeleteDetail" class="far fa-trash-alt text-danger pointer"></i>';
@@ -298,6 +346,98 @@
                     $('td:eq(0)', row).html(index);
                 }
             });
+            
+            // loadBorrowerReturns(parentId);
+            // function loadBorrowerReturns(id) {
+            //     $('#drpBoReturn').val(null).empty().trigger('change');
+            //     AjaxGet(api_url + '/borrow_returns/get', function(result) {
+            //         var optionData = [{
+            //             id: 0,
+            //             text: 'Select borrower return',
+            //             html: 'Select borrower return'
+            //         }];
+            //         $.each(result.data, function(i, el) {
+            //             optionData.push({
+            //                 id: el.BORETURN_ID,
+            //                 text: el.Date,
+            //                 html: '<option class="">' + el.Date + '</option>'
+            //             });
+            //         });
+
+            //         $("#drpBoReturn").select2({
+            //             dropdownParent: $('#editModalDetail'),
+            //             width: '100%',
+            //             data: optionData,
+            //             escapeMarkup: function(markup) {
+            //                 return markup;
+            //             },
+            //             templateResult: function(data) {
+            //                 return data.html;
+            //             },
+            //             templateSelection: function(data) {
+            //                 return data.text;
+            //             }
+            //         });
+            //     });
+            // }
+
+            // loadModelName();               // của detail
+            // function loadModelName() {
+            //     $('#drpModelNameId').val(null).empty().trigger('change');
+            //     AjaxGet(api_url + '/models/get', function(result) {
+            //         var optionData = [{
+            //             id: 0,
+            //             text: 'Select name model',
+            //             html: 'Select name model'
+            //         }];
+            //         $.each(result.data, function(i, el) {
+            //             optionData.push({
+            //                 id: el.MOD_ID,
+            //                 text: el.NameModel,
+            //                 html: '<option value="'+ el.MOD_ID +'">' + el.NameModel + '</option>'
+            //             });
+            //         });
+
+            //         $("#drpModelNameId").select2({
+            //             dropdownParent: $('#editModal'),
+            //             width: '100%',
+            //             data: optionData,
+            //             escapeMarkup: function(markup) {
+            //                 return markup;
+            //             },
+            //             templateResult: function(data) {
+            //                 return data.html;
+            //             },
+            //             templateSelection: function(data) {
+            //                 return data.text;
+            //             }
+            //         });
+            //     });
+            // }
+        // ----------- end select2 borrow detail-----------------
+            $('#editModal').modal({ show: false }).on('show.bs.modal', function (e) {
+            // validatorDetail.resetForm();
+                // check infoData edit or add new
+                if (infoData != null) {
+                    $('#modalAction').text('Update');
+                    $('#hidIdDetail').val(infoData.BORDE_ID);
+                    $('#drpModelIdDetails').val(infoData.MOD_ID).trigger('change');
+                    $('#drpBorrowId').val(infoData.BOR_ID).trigger('change');
+                    $('#drpBoReturn').val(infoData.BORETURN_ID).trigger('change');
+                    $('#txtDueDate').val(infoData.DueDateReturn);
+                    $('#txtDateReturn').val(infoData.DateReturn);
+                    $('#chkIsRenew').bootstrapSwitch('state', infoData.IsRenew);
+                } else {
+                    $('#modalAction').text('New');
+                    $('#hidIdDetail').val(0);
+                    $('#drpModelIdDetails').val('');
+                    $('#drpBorrowId').val(parentId);
+                    $('#drpBoReturn').val(parentId);
+                    $('#txtDueDate').val('');
+                    $('#txtDateReturn').val('');
+                    $('#chkIsRenew').bootstrapSwitch('state',true);
+                }
+            }); 
         }
 
         function bindTableEventsDetail() {
@@ -402,6 +542,8 @@
             })
         //-----------------end datimepicker-------------------
 
+        
+
         // ----------- select2 -----------------
         loadBorrower();
         function loadBorrower() {
@@ -415,8 +557,8 @@
                 $.each(result.data, function(i, el) {
                     optionData.push({
                         id: el.BORROWER_ID,
-                        text: el.FirstName + ' ' + el.LastName,
-                        html: '<option class="">' + el.FirstName  + ' ' + el.LastName + '</option>'
+                        text: el.LastName + ' ' + el.FirstName,
+                        html: '<option class="">' + el.LastName  + ' ' + el.FirstName + '</option>'
                     });
                 });
 
@@ -437,40 +579,6 @@
             });
         }
 
-        // loadModels();
-        // function loadModels() {
-        //     $('#drpModelId').val(null).empty().trigger('change');
-        //     AjaxGet(api_url + '/models/get', function(result) {
-        //         var optionData = [{
-        //             id: 0,
-        //             text: 'Select model',
-        //             html: 'Select model'
-        //         }];
-        //         $.each(result.data, function(i, el) {
-        //             optionData.push({
-        //                 id: el.MOD_ID,
-        //                 text: el.NameModel,
-        //                 html: '<option class="">' + el.NameModel + '</option>'
-        //             });
-        //         });
-
-        //         $("#drpModelId").select2({
-        //             dropdownParent: $('#editModal'),
-        //             width: '100%',
-        //             data: optionData,
-        //             escapeMarkup: function(markup) {
-        //                 return markup;
-        //             },
-        //             templateResult: function(data) {
-        //                 return data.html;
-        //             },
-        //             templateSelection: function(data) {
-        //                 return data.text;
-        //             }
-        //         });
-        //     });
-        // }
-        // End select2 borrow
 
         // ----------- select2 borrow detail-----------------
         loadModels();
@@ -489,8 +597,10 @@
                         html: '<option class="">' + el.NameModel + '</option>'
                     });
                 });
+                
                 $("#drpModelId").select2({
-                    dropdownParent: $('#editModalDetail'),
+                    dropdownParent: $('#editModal'),
+                    
                     width: '100%',
                     data: optionData,
                     escapeMarkup: function(markup) {
@@ -502,8 +612,11 @@
                     templateSelection: function(data) {
                         return data.text;
                     }
+                    
                 });
+                
             });
+            
         }
 
         loadBorrows();
@@ -540,42 +653,6 @@
             });
         }
 
-        loadBorrowerReturns();
-        function loadBorrowerReturns() {
-            $('#drpBoReturn').val(null).empty().trigger('change');
-            AjaxGet(api_url + '/borrow_returns/get', function(result) {
-                var optionData = [{
-                    id: 0,
-                    text: 'Select borrower return',
-                    html: 'Select borrower return'
-                }];
-                $.each(result.data, function(i, el) {
-                    optionData.push({
-                        id: el.BORETURN_ID,
-                        text: el.Date,
-                        html: '<option class="">' + el.Date + '</option>'
-                    });
-                });
-
-                $("#drpBoReturn").select2({
-                    dropdownParent: $('#editModalDetail'),
-                    width: '100%',
-                    data: optionData,
-                    escapeMarkup: function(markup) {
-                        return markup;
-                    },
-                    templateResult: function(data) {
-                        return data.html;
-                    },
-                    templateSelection: function(data) {
-                        return data.text;
-                    }
-                });
-            });
-        }
-        // ----------- end select2 borrow detail-----------------
-
-
         //-----------------datimepicker detail-------------------
         jQuery.datetimepicker.setDateFormatter('moment')
         $('#txtDueDate').datetimepicker({
@@ -602,9 +679,89 @@
         })
         //-----------------end datimepicker detail-------------------
 
+        
+
+
+        
+        $('#btnAddModelDetail').on('click',function () {
+           
+            $('#show-body').fadeIn();
+                var tr = '<tr>'
+                        +'<td>'+ (counter++) +'</td>'
+                        +'<td>'+
+                            '<select id="drpModelIdDetails" name="MOD_ID" class="form-control"></select>'+
+                        '</td>'
+                        +
+                        '<td>'+
+                            '<input type="text" class="form-control" id="txtDueDate" name="DueDateReturn">'
+                        +'</td>'+
+                        '<td>'+
+                            '<input type="checkbox" id="chkIsrenew" name="IsRenew" data-off-color="danger" data-on-color="success" value="true">'
+                        +'</td>'+
+                        '<td><button type="button" id="btnRemove" class="btn btn-danger">Remove</button></td>'+
+                    '</tr>';
+                $('#tbody').append(tr);
+                $('#tbody').on('click','#btnRemove', function (){
+                    $(this).closest('tr').remove();
+                    
+                }); 
+
+
+               loadModelsDetails();
+        function loadModelsDetails() {
+            $('#drpModelIdDetails').val(null).empty().trigger('change');
+            AjaxGet(api_url + '/models/get', function(result) {
+                var optionData = [{
+                    id: 0,
+                    text: 'Select model',
+                    html: 'Select model'
+                }];
+                $.each(result.data, function(i, el) {
+                    optionData.push({
+                        id: el.MOD_ID,
+                        text: el.NameModel,
+                        html: '<option class="" >' + el.NameModel + '</option>'
+                    });
+                });
+                
+                $("#drpModelIdDetails").select2({
+                    dropdownParent: $('#editModal'),
+                    
+                    width: '100%',
+                    data: optionData,
+                    escapeMarkup: function(markup) {
+                        return markup;
+                    },
+                    templateResult: function(data) {
+                        return data.html;
+                    },
+                    templateSelection: function(data) {
+                        return data.text;
+                    }                    
+                });               
+            });           
+        }
+
+                jQuery.datetimepicker.setDateFormatter('moment')
+        $('#txtDueDate').datetimepicker({
+            timepicker: true,
+            datepicker: true,
+            hours12: false,
+            step: 15,
+            format: 'YYYY-MM-DD HH:mm',
+        })
+        $('#toggle').on('click', function () {
+            $('#txtDueDate').datetimepicker('toggle')
+        })
+        });
+        
+
         // Add button
         $('#btnAdd').click(function(){
                     infoData=null;
+                    counter=1;
+                    $('#tbody > tr').remove();
+                $('#show-body').hide();
                     $('#editModal').modal('show');
                     loadBorrower();
                     loadModels();
@@ -640,11 +797,14 @@
                         $('#hidId').val(infoData.BOR_ID);
                         $('#drpBorrowerId').val(infoData.BORROWER_ID).trigger('change');
                         $('#txtDate').val(infoData.Date);
+                        $("#drpModelIdDetails").val(infoData.MOD_ID);
                     } else {
+                        
                         $('#modalAction').text('New');
                         $('#hidId').val('0');
                         $('#drpBorrowerId').val('0').trigger('change');
                         $('#txtDate').val('');
+                        $("#drpModelIdDetails").val('');
                     }
                 });
 
@@ -660,6 +820,7 @@
                                     PNotify.success({title: 'Info', text: 'Borrow has been updated date successfully.'});
                                     $('#editModal').modal('hide');
                                     loadTable();
+                                    loadModelsDetails();
                                 } else {
                                     PNotify.alert({title: 'Warning', text: res.message});
                                 }
@@ -670,6 +831,7 @@
                                     PNotify.success({title: 'Info', text: 'Borrow has been added date successfully.'});
                                     $('#editModal').modal('hide');
                                     loadTable();
+                                    loadModelsDetails();
                                 } else {
                                     PNotify.alert({title: 'Warning', text: res.message});
                                 }
@@ -686,34 +848,11 @@
                     $('#editModalDetail').modal('show');
                     loadModels();
                     loadBorrows();
-                    loadBorrowerReturns();
+                    // loadBorrowerReturns();
                 });
 
         //Edit Detail
-        $('#editModalDetail').modal({ show: false }).on('show.bs.modal', function (e) {
-        // validatorDetail.resetForm();
-            // check infoData edit or add new
-            if (infoData != null) {
-                $('#modalAction').text('Update');
-                $('#hidIdDetail').val(infoData.BORDE_ID);
-                $('#drpModelId').val(infoData.MOD_ID).trigger('change');
-                $('#drpBorrowId').val(infoData.BOR_ID).trigger('change');
-                $('#drpBoReturn').val(infoData.BORETURN_ID).trigger('change');
-                $('#txtDueDate').val(infoData.DueDateReturn);
-                $('#txtDateReturn').val(infoData.DateReturn);
-                $('#chkIsRenew').bootstrapSwitch('state', infoData.IsRenew);
-            } else {
-                $('#modalAction').text('New');
-                $('#hidIdDetail').val(0);
-                $('#drpModelId').val('0').trigger('change');
-                $('#drpBorrowId').val('0').trigger('change');
-                $('#drpBoReturn').val('0').trigger('change');
-                $('#txtDueDate').val('');
-                $('#txtDateReturn').val('');
-                $('#chkIsRenew').bootstrapSwitch('state',true);
-            }
-        });   
-
+       
         //Save Detail
         $('#btnSaveModalDetail').click(function(){
             if ($('#frm').valid()) {
@@ -726,7 +865,8 @@
                             PNotify.success({title: 'Info', text: 'Detail borrow has been updated successfully.'});
                             $('#editModalDetail').modal('hide');
                             loadTable();
-                            loadModels();
+                            //loadModels();
+                            loadModelsDetails();
                             loadBorrows();
                             loadBorrowerReturns();
 

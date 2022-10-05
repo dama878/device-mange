@@ -17,7 +17,10 @@ class ExportsController extends Controller
         if ($id) {
             $data = Export::where(['IsDeleted' => 0, 'EXP_ID' => $id])->first();
         } else {
-            $data = Export::where('IsDeleted', 0)->get();
+            $data = Export::join('customers', function ($join) {
+                $join->on('exports.CUS_ID', '=', 'customers.CUS_ID')
+                    ->where(['exports.IsDeleted' => 0, 'customers.isDeleted' => 0]);
+            })->get();
         }
         return BaseResult::withData($data);
     }
@@ -45,7 +48,7 @@ class ExportsController extends Controller
                 $export->Place = $request->input('Place');
                 $export->Export = $request->input('Export');
                 $export->IsDeleted = 0;
-                // $export->CreatedBy = $user->USE_ID;
+                $export->CreatedBy = $user->USE_ID;
 
                 $export->save();
                 return BaseResult::withData($export);
@@ -79,7 +82,7 @@ class ExportsController extends Controller
                     $export->Place = $request->input('Place');
                     $export->Export = $request->input('Export');
                     $export->IsDeleted = 0;
-                    // $export->UpdatedBy = $user->USE_ID;
+                    $export->UpdatedBy = $user->USE_ID;
 
                     $export->save();
                     return BaseResult::withData($export);
@@ -98,7 +101,7 @@ class ExportsController extends Controller
             $user = Session::get('user');
 
             $export->IsDeleted = 1;
-            // $export->UpdatedBy = $user->USE_ID;
+            $export->UpdatedBy = $user->USE_ID;
             $export->save();
             return BaseResult::withData($export);
         } else {

@@ -17,11 +17,33 @@ class ImportDetailsController extends Controller
         if ($id) {
             $data = ImportDetail::where(['IsDeleted' => 0, 'IMPDE_ID' => $id])->first();
         } else {
-            $data = ImportDetail::join('imports', function ($join) {
+            $data = ImportDetail::join('models', function ($join) {
+                $join->on('models.MOD_ID', '=', 'import_details.MOD_ID')
+                    ->where(['models.IsDeleted' => 0, 'import_details.isDeleted' => 0]);
+            })->join('imports', function ($join) {
                 $join->on('imports.IMP_ID', '=', 'import_details.IMP_ID')
                     ->where(['imports.IsDeleted' => 0, 'import_details.isDeleted' => 0]);
+            })->join('customers', function ($join) {
+                $join->on('customers.CUS_ID', '=', 'imports.CUS_ID')
+                    ->where(['customers.IsDeleted' => 0, 'imports.IsDeleted' => 0]);
             })->get();
         }
+        return BaseResult::withData($data);
+    }
+
+    public function getByID($id)
+    {
+        $data = ImportDetail::join('models', function ($join) {
+            $join->on('import_details.MOD_ID', '=', 'models.MOD_ID')
+                ->where(['import_details.IsDeleted' => 0, 'models.isDeleted' => 0]);
+        })->join('imports', function ($join) use ($id) {
+            $join->on('import_details.IMP_ID', '=', 'imports.IMP_ID')
+                ->where([
+                    'import_details.IsDeleted' => 0,
+                    'imports.isDeleted' => 0,
+                    'import_details.IMP_ID' => $id
+                ]);
+        })->get();
         return BaseResult::withData($data);
     }
 
@@ -50,7 +72,7 @@ class ImportDetailsController extends Controller
                 $importDetail->Price = $request->Price;
                 $importDetail->Note = $request->input('Note');
                 $importDetail->IsDeleted = 0;
-                // $importDetail->CreatedBy = $user->USE_ID;
+                $importDetail->CreatedBy = $user->USE_ID;
 
                 $importDetail->save();
                 return BaseResult::withData($importDetail);
@@ -87,7 +109,7 @@ class ImportDetailsController extends Controller
                     $importDetail->Price = $request->Price;
                     $importDetail->Note = $request->input('Note');
                     $importDetail->IsDeleted = 0;
-                    // $importDetail->CreatedBy = $user->USE_ID;
+                    $importDetail->CreatedBy = $user->USE_ID;
 
                     $importDetail->save();
                     return BaseResult::withData($importDetail);
@@ -107,7 +129,7 @@ class ImportDetailsController extends Controller
             $user = Session::get('user');
 
             $importDetail->IsDeleted = 1;
-            // $importDetail->UpdatedBy = $user->USE_ID;
+            $importDetail->UpdatedBy = $user->USE_ID;
             $importDetail->save();
             return BaseResult::withData($importDetail);
         } else {

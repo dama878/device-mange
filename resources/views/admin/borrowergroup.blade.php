@@ -161,10 +161,23 @@
             });
             var validator = $('#frm').validate({
                 rules: {
-                    Name: 'required'
+                    Name: {
+                        required: true,
+                        remote: {
+                            url: api_url + '/borrower_groups/exist',
+                            type: "GET",
+                            contentType: 'application/json; charset=utf-8',
+                            data: {
+                                id: $('#hiId').val()
+                            }
+                        }
+                    }
                 },
                 messages: {
-                    Name: 'Please enter borrower group name.'
+                    Name: {
+                        required: 'Please enter name of Borrower Group.',
+                        remote: 'Name is existed,please enter another name'
+                    }
                 },
                 errorElement: 'span',
                 errorPlacement: function(error, element) {
@@ -187,7 +200,7 @@
                 if (infoData != null) {
                     $('#modalAction').text('Update');
                     $('#hidId').val(infoData.BOGROUP_ID);
-                    $('#txtName').val(infoData.Name);
+                    $('#txtName').val(infoData.Name).trigger('change');
                 } else {
                     $('#modalAction').text('New');
                     $('#hidId').val('0');

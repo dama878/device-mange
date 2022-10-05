@@ -54,13 +54,13 @@
                             <input type="text" class="form-control" id="txtAmount" name="Amount" maxlength="8" placeholder="Amount" data-value-type="number" style="width: 120px"/>
                         </div>
                     </div>
-                    <div class="form-row">
+                    {{-- <div class="form-row">
                         <label for="drpBorrowId" class="col-sm-3 col-form-label" >Multiple Borrow</label>
                         <div class="form-group col-sm">
                         <select class="select2" name="BOR_ID[]" id="drpBorrowId" multiple="multiple" style="width: 100%;">
                         </select>
                         </div>
-                        </div>
+                        </div> --}}
                 </form>
             </div>
             <div class="modal-footer">

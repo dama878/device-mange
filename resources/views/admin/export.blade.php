@@ -123,7 +123,7 @@
                     data: 'Date'
                 },
                 {
-                    data: 'CUS_ID'
+                    data: 'FullName'
                 },
                 {
                     data: 'Depot'
